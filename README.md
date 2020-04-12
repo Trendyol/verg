@@ -11,6 +11,12 @@ brew tap trendyol/trendyol-tap
 brew install verg
 ```
 
+Use go module to install verG.
+
+```bash
+go get github.com/trendyol/verg
+```
+
 ## Increment Version
 
 ```bash
