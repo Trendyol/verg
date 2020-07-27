@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"log"
+	"runtime"
 	"strings"
 )
 
@@ -11,6 +12,23 @@ func main() {
 
 	var semantic *Semantic
 	var major, minor, patch, release, beta, alpha bool
+
+	var (
+		version = "dev"
+		commit  = "none"
+		date    = "unknown"
+		builtBy = "unknown"
+	)
+
+	var info = fmt.Sprintf(
+		"verg %s (%s, %s, %s) on %s (%s)",
+		version,
+		builtBy,
+		date,
+		commit,
+		runtime.GOOS,
+		runtime.GOARCH,
+	)
 
 	var cmd = &cobra.Command{
 		Use:  "verg",
@@ -55,6 +73,14 @@ func main() {
 		},
 	}
 
+	var versionCmd = &cobra.Command{
+		Use:   "version",
+		Short: "Print the version number of verg",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println(info)
+		},
+	}
+
 	cmd.Flags().BoolVarP(&major, "major", "x", false, "increment major version")
 	cmd.Flags().BoolVarP(&minor, "minor", "y", false, "increment minor version")
 	cmd.Flags().BoolVarP(&patch, "patch", "z", false, "increment patch version")
@@ -62,7 +88,7 @@ func main() {
 	cmd.Flags().BoolVarP(&beta, "beta", "b", false, "increment beta version")
 	cmd.Flags().BoolVarP(&alpha, "alpha", "a", false, "increment alpha version")
 
-	cmd.AddCommand(compareCmd)
+	cmd.AddCommand(compareCmd, versionCmd)
 
 	_ = cmd.Execute()
 }
